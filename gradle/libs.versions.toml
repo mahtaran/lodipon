@@ -13,7 +13,7 @@ composeBom = "2024.09.02"
 accompanistPermissions = "0.36.0"
 playServicesLocation = "21.3.0"
 playServicesMaps = "19.0.0"
-googleMapsCompose = "6.1.0"
+googleMapsCompose = "6.1.2"
 googleSecrets = "2.0.1"
 
 [libraries]
