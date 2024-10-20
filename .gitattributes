@@ -1,0 +1,30 @@
+# Based on https://github.com/gitattributes/gitattributes
+
+# Auto detect text files and perform LF normalization
+*								text=auto	eol=lf
+
+# The above will handle all files NOT found below
+
+# Tool configuration
+## Git
+.gitattributes					text
+.gitignore						text
+
+## Others
+.editorconfig					text
+
+# Documents
+## Plain text
+*.md							text
+
+# Media
+## Graphics
+*.png							binary
+*.jpg							binary
+*.svg							text
+
+# Data
+*.json							text
+*.yaml							text
+
+# Code

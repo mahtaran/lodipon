@@ -1,0 +1,56 @@
+name: Check
+
+on:
+  push:
+
+jobs:
+  check-gradle:
+    name: Run Gradle checks
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: 17
+        cache: gradle
+
+    - name: Set up Gradle
+      uses: gradle/actions/setup-gradle@v4
+
+    - name: Run Gradle checks
+      run: ./gradlew check
+
+  submit-dependency-graph:
+    name: Submit dependency graph
+    runs-on: ubuntu-latest
+
+    if: github.ref_name == github.event.repository.default_branch
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: 17
+        check-latest: true
+        cache: gradle
+
+    - name: Set up Gradle
+      uses: gradle/actions/setup-gradle@v4
+
+    - name: Submit dependency graph
+      uses: gradle/actions/dependency-submission@v4
+      with:
+        build-scan-publish: true
+        build-scan-terms-of-use-url: https://gradle.com/legal/terms-of-use
+        build-scan-terms-of-use-agree: true
