@@ -1,0 +1,6 @@
+{
+  "sonarlint.connectedMode.project": {
+    "connectionId": "mahtaran",
+    "projectKey": "mahtaran_lodipon"
+  }
+}

@@ -1,0 +1,9 @@
+# Based on https://github.com/github/gitignore
+
+# JetBrains
+caches/
+
+## Generated
+
+## User-specific
+workspace.xml
