@@ -23,8 +23,14 @@ gradle/wrapper/gradle-wrapper.jar	binary
 .idea/.name							text
 *.md								text
 
+## Formatted
+*.html								text
+*.pdf								binary
+*.pptx								binary
+
 # Media
 ## Graphics
+*.excalidraw						text	linguist-language=JSON
 *.jpg								binary
 *.png								binary
 *.svg								text
