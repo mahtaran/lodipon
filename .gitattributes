@@ -23,11 +23,6 @@ gradle/wrapper/gradle-wrapper.jar	binary
 .idea/.name							text
 *.md								text
 
-## Formatted
-*.html								text
-*.pdf								binary
-*.pptx								binary
-
 # Media
 ## Graphics
 *.excalidraw						text	linguist-language=JSON
@@ -38,6 +33,7 @@ gradle/wrapper/gradle-wrapper.jar	binary
 
 # Data
 *.json								text
+*.html								text
 *.pro								text
 *.properties						text
 *.toml								text
