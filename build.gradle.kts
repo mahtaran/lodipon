@@ -15,12 +15,6 @@ plugins {
 spotless {
 	ratchetFrom("origin/main")
 
-	flexmark {
-		target("**/*.md")
-
-		flexmark()
-	}
-
 	json {
 		target("**/*.json")
 		targetExclude("dependency-graph-reports/**/*.json")
