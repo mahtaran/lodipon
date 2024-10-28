@@ -87,7 +87,7 @@ section::after {
   content: attr(data-marpit-pagination) ' / ' attr(data-marpit-pagination-total);
   width: auto;
 }
-;" data-marpit-pagination-total="8">
+;" data-marpit-pagination-total="7">
 <h2 id="team--task-distribution">Team &amp; task distribution</h2>
 <table>
 <thead>
@@ -153,11 +153,11 @@ section::after {
   content: attr(data-marpit-pagination) ' / ' attr(data-marpit-pagination-total);
   width: auto;
 }
-;" data-marpit-pagination-total="8">
+;" data-marpit-pagination-total="7">
 <h2 id="progress-so-far">Progress so far</h2>
 <footer>Pitch #3 | 2024-10-28</footer>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="4" data-paginate="true" data-footer="Pitch #3 | 2024-10-28" data-heading-divider="4" data-lang="en-GB" data-theme="uncover" data-style="/* Colours */
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="4" data-marpit-fragments="6" data-paginate="true" data-footer="Pitch #3 | 2024-10-28" data-heading-divider="4" data-lang="en-GB" data-theme="uncover" data-style="/* Colours */
 :root {
   --color-header: rgba(32, 34, 40, .8);
 }
@@ -193,19 +193,19 @@ section::after {
   content: attr(data-marpit-pagination) ' / ' attr(data-marpit-pagination-total);
   width: auto;
 }
-;" data-marpit-pagination-total="8">
+;" data-marpit-pagination-total="7">
 <h3 id="visualisation">Visualisation</h3>
 <ul>
-<li>Monday morning flu</li>
-<li>Monday afternoon flu</li>
-<li>Monday evening flu</li>
-<li>Tuesday flu</li>
-<li>Wednesday flu</li>
-<li>Thursday flu</li>
+<li data-marpit-fragment="1">Monday morning flu</li>
+<li data-marpit-fragment="2">Monday afternoon flu</li>
+<li data-marpit-fragment="3">Monday evening flu</li>
+<li data-marpit-fragment="4">Tuesday flu</li>
+<li data-marpit-fragment="5">Wednesday flu</li>
+<li data-marpit-fragment="6">Thursday flu</li>
 </ul>
 <footer>Pitch #3 | 2024-10-28</footer>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="5" data-paginate="true" data-footer="Pitch #3 | 2024-10-28" data-heading-divider="4" data-lang="en-GB" data-theme="uncover" data-style="/* Colours */
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="5" data-marpit-fragments="3" data-paginate="true" data-footer="Pitch #3 | 2024-10-28" data-heading-divider="4" data-lang="en-GB" data-theme="uncover" data-style="/* Colours */
 :root {
   --color-header: rgba(32, 34, 40, .8);
 }
@@ -241,16 +241,16 @@ section::after {
   content: attr(data-marpit-pagination) ' / ' attr(data-marpit-pagination-total);
   width: auto;
 }
-;" data-marpit-pagination-total="8">
-<h3 id="the-challenge-of-measuring-velocity">The challenge of measuring velocity</h3>
+;" data-marpit-pagination-total="7">
+<h3 id="the-challenge-of-using-an-accelerometer-to-measure-velocity">The challenge of using an accelerometer to measure velocity</h3>
 <ul>
-<li><strong>Acceleration</strong> is, by definition, only the <strong>rate of change</strong>.</li>
-<li><strong>Velocity</strong> is a relative measure <strong>within a system</strong>.</li>
-<li>What we want, is a <strong>stable and reliable</strong> measure of velocity.</li>
+<li data-marpit-fragment="1"><strong>Acceleration</strong> is, by definition, only the <strong>rate of change</strong>.</li>
+<li data-marpit-fragment="2">Relative to its <strong>containing system</strong></li>
+<li data-marpit-fragment="3">Simpler and accurate enough: just use <strong>GPS data!</strong></li>
 </ul>
 <footer>Pitch #3 | 2024-10-28</footer>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="6" data-paginate="true" data-footer="Pitch #3 | 2024-10-28" data-heading-divider="4" data-lang="en-GB" data-theme="uncover" data-style="/* Colours */
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="6" data-marpit-fragments="3" data-paginate="true" data-footer="Pitch #3 | 2024-10-28" data-heading-divider="4" data-lang="en-GB" data-theme="uncover" data-style="/* Colours */
 :root {
   --color-header: rgba(32, 34, 40, .8);
 }
@@ -286,13 +286,12 @@ section::after {
   content: attr(data-marpit-pagination) ' / ' attr(data-marpit-pagination-total);
   width: auto;
 }
-;" data-marpit-pagination-total="8">
-<h4 id="the-solution">The solution</h4>
-<p>A combination of multiple sources of data:</p>
+;" data-marpit-pagination-total="7">
+<h3 id="anomaly-detection">Anomaly detection</h3>
 <ul>
-<li>Get an <strong>initial velocity</strong> from the <strong>GPS</strong>.</li>
-<li><strong>Correct</strong> this velocity with the <strong>accelerometer</strong>.</li>
-<li><strong>Check</strong> the velocity <strong>at fixed points</strong> using the <strong>beacons</strong>.</li>
+<li data-marpit-fragment="1"><strong>Naive version:</strong> 10% deviation.</li>
+<li data-marpit-fragment="2"><strong>Improvements:</strong> running patterns and rhythm matching.</li>
+<li data-marpit-fragment="3"><strong>Localisation:</strong> trilateration using distance from beacons (RSSI)</li>
 </ul>
 <footer>Pitch #3 | 2024-10-28</footer>
 </section>
@@ -332,12 +331,9 @@ section::after {
   content: attr(data-marpit-pagination) ' / ' attr(data-marpit-pagination-total);
   width: auto;
 }
-;" data-marpit-pagination-total="8">
-<h3 id="anomaly-detection">Anomaly detection</h3>
-<ul>
-<li><strong>Naive version:</strong> 10% deviation.</li>
-<li><strong>Improvements:</strong> running patterns and rhythm matching.</li>
-</ul>
+;" data-marpit-pagination-total="7">
+<h2 id="coming-up">Coming up</h2>
+<p><img src="asset/planning.svg" alt="" style="width:30cm;" /></p>
 <footer>Pitch #3 | 2024-10-28</footer>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="8" data-paginate="true" data-footer="Pitch #3 | 2024-10-28" data-heading-divider="4" data-lang="en-GB" data-theme="uncover" data-style="/* Colours */
@@ -376,48 +372,7 @@ section::after {
   content: attr(data-marpit-pagination) ' / ' attr(data-marpit-pagination-total);
   width: auto;
 }
-;" data-marpit-pagination-total="8">
-<h2 id="coming-up">Coming up</h2>
-<p><img src="asset/planning.svg" alt="" style="width:30cm;" /></p>
-<footer>Pitch #3 | 2024-10-28</footer>
-</section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="9" data-paginate="true" data-footer="Pitch #3 | 2024-10-28" data-heading-divider="4" data-lang="en-GB" data-theme="uncover" data-style="/* Colours */
-:root {
-  --color-header: rgba(32, 34, 40, .8);
-}
-
-/* Fix footer alignment */
-footer {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 0.2rem;
-}
-
-/* Show total page number */
-section::after {
-  content: attr(data-marpit-pagination) ' / ' attr(data-marpit-pagination-total);
-  width: auto;
-}
-" lang="en-GB" data-marpit-pagination="8" style="--paginate:true;--footer:Pitch #3 | 2024-10-28;--heading-divider:4;--lang:en-GB;--theme:uncover;--style:/* Colours */
-:root {
-  --color-header: rgba(32, 34, 40, .8);
-}
-
-/* Fix footer alignment */
-footer {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 0.2rem;
-}
-
-/* Show total page number */
-section::after {
-  content: attr(data-marpit-pagination) ' / ' attr(data-marpit-pagination-total);
-  width: auto;
-}
-;" data-marpit-pagination-total="8">
+;" data-marpit-pagination-total="7">
 <h2 id="any-questions">Any questions?</h2>
 <footer>Pitch #3 | 2024-10-28</footer>
 </section>

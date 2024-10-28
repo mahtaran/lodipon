@@ -57,24 +57,17 @@ _paginate: skip
 * Wednesday flu
 * Thursday flu
 
-### The challenge of measuring velocity
+### The challenge of using an accelerometer to measure velocity
 
 * **Acceleration** is, by definition, only the **rate of change**.
-* **Velocity** is a relative measure **within a system**.
-* What we want, is a **stable and reliable** measure of velocity.
-
-#### The solution
-
-A combination of multiple sources of data:
-
-* Get an **initial velocity** from the **GPS**.
-* **Correct** this velocity with the **accelerometer**.
-* **Check** the velocity **at fixed points** using the **beacons**.
+* Relative to its **containing system**
+* Simpler and accurate enough: just use **GPS data!**
 
 ### Anomaly detection
 
 * **Naive version:** 10% deviation.
 * **Improvements:** running patterns and rhythm matching.
+* **Localisation:** trilateration using distance from beacons (RSSI)
 
 ## Coming up
 
