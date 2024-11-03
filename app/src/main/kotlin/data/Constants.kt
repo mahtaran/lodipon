@@ -1,11 +1,10 @@
 package nl.utwente.smartspaces.lodipon.data
 
-import com.google.android.gms.maps.model.LatLng
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
-const val WINDOW_SIZE = 32
-
+val SCANNING_PERIOD = 10.seconds
 val MEASURE_INTERVAL = 200.milliseconds
 
-val DEFAULT_LOCATION = LatLng(52.2383, 6.8507)
-
+const val WINDOW_SIZE = 16
+const val EARTH_RADIUS = 6_371_000.0
