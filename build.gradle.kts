@@ -1,9 +1,3 @@
-buildscript {
-	dependencies {
-		classpath(libs.google.secrets)
-	}
-}
-
 plugins {
 	alias(libs.plugins.spotless)
 

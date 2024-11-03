@@ -6,12 +6,6 @@ plugins {
 	alias(libs.plugins.android.application)
 	alias(libs.plugins.kotlin.android)
 	alias(libs.plugins.compose.compiler)
-
-	id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-}
-
-secrets {
-	defaultPropertiesFileName = "local.defaults.properties"
 }
 
 android {
@@ -87,8 +81,9 @@ dependencies {
 	implementation(libs.androidx.material3)
 	implementation(libs.accompanist.permissions)
 	implementation(libs.play.services.location)
-	implementation(libs.play.services.maps)
-	implementation(libs.google.maps.compose)
+	implementation(libs.beacon)
+	implementation(libs.jtransforms)
+	implementation(libs.vico.compose)
 
 	testImplementation(libs.junit)
 
