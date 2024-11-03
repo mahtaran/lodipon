@@ -1,6 +1,7 @@
 package nl.utwente.smartspaces.lodipon.ui
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
@@ -88,11 +89,9 @@ fun Analytics(padding: PaddingValues, viewModel: AnalyticsViewModel = viewModel(
     }
 }
 
+@SuppressLint("MissingPermission")
 @Composable
-fun Scanner(
-    modifier: Modifier = Modifier.fillMaxSize(),
-    viewModel: AnalyticsViewModel = viewModel()
-) {
+fun Scanner(modifier: Modifier = Modifier, viewModel: AnalyticsViewModel = viewModel()) {
     val uiState by viewModel.uiState.collectAsState()
 
     var scanning by remember { mutableStateOf(false) }
@@ -145,11 +144,9 @@ fun Scanner(
     }
 }
 
+@SuppressLint("MissingPermission")
 @Composable
-fun Speedometer(
-    modifier: Modifier = Modifier.fillMaxSize(),
-    viewModel: AnalyticsViewModel = viewModel()
-) {
+fun Speedometer(modifier: Modifier = Modifier, viewModel: AnalyticsViewModel = viewModel()) {
     val uiState by viewModel.uiState.collectAsState()
 
     val locationListener = LocationListener { location -> viewModel.updateLocation(location) }
@@ -172,10 +169,7 @@ fun Speedometer(
 }
 
 @Composable
-fun Visualisation(
-    modifier: Modifier = Modifier.fillMaxSize(),
-    viewModel: AnalyticsViewModel = viewModel()
-) {
+fun Visualisation(modifier: Modifier = Modifier, viewModel: AnalyticsViewModel = viewModel()) {
     val uiState by viewModel.uiState.collectAsState()
 
     Column(

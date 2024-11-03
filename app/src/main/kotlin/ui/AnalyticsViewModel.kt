@@ -5,13 +5,13 @@ import android.location.Location
 import android.location.LocationManager
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import java.time.LocalDateTime
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import nl.utwente.smartspaces.lodipon.data.CHECKPOINT_THRESHOLD
 import nl.utwente.smartspaces.lodipon.data.ScannedDevice
 import nl.utwente.smartspaces.lodipon.data.beacons
-import java.time.LocalDateTime
 
 class AnalyticsViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(AnalyticsUiState(LocalDateTime.now()))
