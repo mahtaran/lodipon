@@ -2,11 +2,7 @@
   "files.associations": {
     "*.excalidraw": "json"
   },
-
-  "languageToolLinter.languageTool.ignoredWordsInWorkspace": [
-    "Lodipon"
-  ],
-
+  "languageToolLinter.languageTool.ignoredWordsInWorkspace": [ "Lodipon" ],
   "sonarlint.connectedMode.project": {
     "connectionId": "mahtaran",
     "projectKey": "mahtaran_lodipon"

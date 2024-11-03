@@ -12,18 +12,16 @@ import nl.utwente.smartspaces.lodipon.ui.Analytics
 import nl.utwente.smartspaces.lodipon.ui.theme.LodiponTheme
 
 class MainActivity : ComponentActivity() {
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-		@SuppressLint("SourceLockedOrientationActivity")
-		requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        @SuppressLint("SourceLockedOrientationActivity")
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
-		setContent {
-			LodiponTheme {
-				Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
-					Analytics(padding)
-				}
-			}
-		}
-	}
+        setContent {
+            LodiponTheme {
+                Scaffold(modifier = Modifier.fillMaxSize()) { padding -> Analytics(padding) }
+            }
+        }
+    }
 }
