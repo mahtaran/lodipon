@@ -52,7 +52,7 @@ fun RunScreen(modifier: Modifier = Modifier, viewModel: LodiponViewModel = viewM
         object : ScanCallback() {
             override fun onScanResult(callbackType: Int, result: ScanResult?) {
                 result?.let {
-                    viewModel.scanDevice(
+                    viewModel.passDevice(
                         ScannedDevice(
                             name = it.device.name ?: "Unknown device",
                             mac = MacAddress.fromString(it.device.address),

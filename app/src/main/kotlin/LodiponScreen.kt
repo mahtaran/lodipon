@@ -15,11 +15,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -30,7 +28,6 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import nl.utwente.smartspaces.lodipon.ui.PermissionsScreen
 import nl.utwente.smartspaces.lodipon.ui.RunScreen
 import nl.utwente.smartspaces.lodipon.ui.SettingsScreen
-import nl.utwente.smartspaces.lodipon.ui.viewmodel.LodiponViewModel
 
 enum class LodiponScreen(val title: String) {
     Permissions(title = "Permissions"),
@@ -40,10 +37,7 @@ enum class LodiponScreen(val title: String) {
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun LodiponApp(
-    viewModel: LodiponViewModel = viewModel(),
-    navController: NavHostController = rememberNavController()
-) {
+fun LodiponApp(navController: NavHostController = rememberNavController()) {
     val backStackEntry by navController.currentBackStackEntryAsState()
 
     val permissionsState =
@@ -74,9 +68,6 @@ fun LodiponApp(
             )
         }
     ) { innerPadding ->
-        val settingsState by viewModel.settingsState.collectAsState()
-        val runState by viewModel.runState.collectAsState()
-
         NavHost(
             navController = navController,
             startDestination =
