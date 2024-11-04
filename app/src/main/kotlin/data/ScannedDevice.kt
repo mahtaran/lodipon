@@ -3,7 +3,7 @@ package nl.utwente.smartspaces.lodipon.data
 import android.net.MacAddress
 import kotlin.math.pow
 
-data class ScannedDevice(val mac: MacAddress, val rssi: Int) {
+data class ScannedDevice(val name: String, val mac: MacAddress, val rssi: Int) {
     val distance: Double = calculateDistance(rssi)
 
     /**
@@ -23,5 +23,18 @@ data class ScannedDevice(val mac: MacAddress, val rssi: Int) {
         val n = 2.0
 
         return 10.0.pow((txPower - rssi) / (10 * n))
+    }
+
+    override fun hashCode(): Int {
+        return mac.hashCode()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ScannedDevice) return false
+
+        if (mac != other.mac) return false
+
+        return true
     }
 }

@@ -31,6 +31,9 @@ gradle/wrapper/gradle-wrapper.jar	binary
 *.svg								text
 *.webp								binary
 
+## Audio
+*.mp3								binary
+
 # Data
 *.json								text
 *.html								text

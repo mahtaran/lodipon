@@ -11,6 +11,7 @@ class SpeedWindow(private val windowSize: Int) {
     private val window: MutableList<Double> = ArrayList(windowSize)
     private val timeSource = TimeSource.Monotonic
     private var lastUpdate = timeSource.markNow()
+    private var lastAnomaly = timeSource.markNow()
 
     fun add(value: Double): SpeedWindow {
         if (lastUpdate + MEASURE_INTERVAL > timeSource.markNow()) {
@@ -27,8 +28,13 @@ class SpeedWindow(private val windowSize: Int) {
         return this
     }
 
+    operator fun plus(value: Double): SpeedWindow {
+        return add(value)
+    }
+
     fun performAnalysis(): Anomaly? {
-        if (window.size < windowSize) {
+        if (window.size < windowSize || lastAnomaly + ANOMALY_INTERVAL > timeSource.markNow()) {
+            // Short circuit
             return null
         }
 
@@ -49,6 +55,7 @@ class SpeedWindow(private val windowSize: Int) {
         val maxMagnitude = magnitudes[maxIndex]
 
         return if (maxMagnitude > 5.0) {
+            lastAnomaly = timeSource.markNow()
             Anomaly(maxIndex, maxMagnitude)
         } else {
             null
