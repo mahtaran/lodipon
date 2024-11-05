@@ -4,6 +4,8 @@
 caches/
 
 ## Generated
+modules/**/*.iml
+modules.xml
 
 ## User-specific
 workspace.xml
