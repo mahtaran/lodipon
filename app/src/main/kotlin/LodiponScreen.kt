@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -28,6 +29,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import nl.utwente.smartspaces.lodipon.ui.PermissionsScreen
 import nl.utwente.smartspaces.lodipon.ui.RunScreen
 import nl.utwente.smartspaces.lodipon.ui.SettingsScreen
+import nl.utwente.smartspaces.lodipon.ui.viewmodel.LodiponViewModel
 
 enum class LodiponScreen(val title: String) {
     Permissions(title = "Permissions"),
@@ -37,7 +39,10 @@ enum class LodiponScreen(val title: String) {
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun LodiponApp(navController: NavHostController = rememberNavController()) {
+fun LodiponApp(
+    navController: NavHostController = rememberNavController(),
+    viewModel: LodiponViewModel = viewModel()
+) {
     val backStackEntry by navController.currentBackStackEntryAsState()
 
     val permissionsState =
@@ -89,12 +94,13 @@ fun LodiponApp(navController: NavHostController = rememberNavController()) {
             composable(route = LodiponScreen.Settings.name) {
                 SettingsScreen(
                     onStartButtonClicked = { navController.navigate(LodiponScreen.Run.name) },
-                    modifier = Modifier.fillMaxSize().padding(16.dp)
+                    modifier = Modifier.fillMaxSize().padding(16.dp),
+                    viewModel = viewModel
                 )
             }
 
             composable(route = LodiponScreen.Run.name) {
-                RunScreen(modifier = Modifier.fillMaxSize().padding(16.dp))
+                RunScreen(modifier = Modifier.fillMaxSize().padding(16.dp), viewModel = viewModel)
             }
         }
     }

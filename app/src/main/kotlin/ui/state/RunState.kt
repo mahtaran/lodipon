@@ -1,22 +1,36 @@
 package nl.utwente.smartspaces.lodipon.ui.state
 
-import android.location.Location
 import java.time.LocalDateTime
-import nl.utwente.smartspaces.lodipon.data.SpeedWindow
-import nl.utwente.smartspaces.lodipon.data.WINDOW_SIZE
+import java.time.temporal.ChronoUnit
+import java.util.LinkedList
+import kotlin.time.ComparableTimeMark
+import nl.utwente.smartspaces.lodipon.R
+import nl.utwente.smartspaces.lodipon.data.LARGE_WINDOW_SIZE
+import nl.utwente.smartspaces.lodipon.data.SMALL_WINDOW_SIZE
+import nl.utwente.smartspaces.lodipon.data.SlidingWindow
 
 data class RunState(
-    val lastUpdate: LocalDateTime,
-    val lastLocation: Location? = null,
-    val lastCheckpoint: Int? = null,
-    val speedWindow: SpeedWindow = SpeedWindow(WINDOW_SIZE),
-    val checkpoints: List<Pair<Int, LocalDateTime>> = emptyList(),
+    val lastAnomaly: ComparableTimeMark,
     val recommendation: Recommendation = Recommendation.NONE,
-    val anomalyText: String = "No anomalies detected"
+    val speedWindow: SlidingWindow = SlidingWindow(SMALL_WINDOW_SIZE),
+    val averageSpeedWindow: SlidingWindow = SlidingWindow(LARGE_WINDOW_SIZE),
+    val lastCheckpoint: Int? = null,
+    val checkpoints: LinkedList<Checkpoint> = LinkedList(),
 )
 
-enum class Recommendation {
+data class Checkpoint(
+    val index: Int,
+    val time: LocalDateTime,
+    val distance: Int,
+    val previous: Checkpoint? = null,
+) {
+    val duration: Double =
+        (previous?.let { ChronoUnit.MILLIS.between(it.time, time) } ?: 0) / 1000.0
+    val speed: Double = distance / duration
+}
+
+enum class Recommendation(val sample: Int? = null) {
     NONE,
-    SLOW_DOWN,
-    SPEED_UP
+    SLOW_DOWN(R.raw.slower),
+    SPEED_UP(R.raw.faster)
 }

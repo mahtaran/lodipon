@@ -39,15 +39,12 @@ import androidx.compose.runtime.toMutableStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import nl.utwente.smartspaces.lodipon.data.SCAN_PERIOD
 import nl.utwente.smartspaces.lodipon.data.ScannedDevice
-import nl.utwente.smartspaces.lodipon.ui.theme.LodiponTheme
 import nl.utwente.smartspaces.lodipon.ui.viewmodel.LodiponViewModel
 
 @SuppressLint("MissingPermission")
@@ -55,7 +52,7 @@ import nl.utwente.smartspaces.lodipon.ui.viewmodel.LodiponViewModel
 fun BeaconSelectionDialog(
     onDismiss: () -> Unit,
     onConfirmation: (Map<Int, Set<MacAddress>>) -> Unit,
-    viewModel: LodiponViewModel = viewModel()
+    viewModel: LodiponViewModel
 ) {
     val context = LocalContext.current
     val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
@@ -81,7 +78,8 @@ fun BeaconSelectionDialog(
             startScan = { bluetoothLeScanner.startScan(scanCallback) },
             stopScan = { bluetoothLeScanner.stopScan(scanCallback) },
             onDismiss = onDismiss,
-            onConfirmation = onConfirmation
+            onConfirmation = onConfirmation,
+            viewModel = viewModel
         )
     }
 }
@@ -92,7 +90,7 @@ private fun BeaconSelectionCard(
     stopScan: () -> Unit,
     onDismiss: () -> Unit,
     onConfirmation: (Map<Int, Set<MacAddress>>) -> Unit,
-    viewModel: LodiponViewModel = viewModel()
+    viewModel: LodiponViewModel
 ) {
     val settingsState by viewModel.settingsState.collectAsState()
 
@@ -161,72 +159,78 @@ private fun BeaconSelectionCard(
                     horizontalAlignment = Alignment.Start,
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    settingsState.scannedDevices.forEach {
-                        var expanded by remember { mutableStateOf(false) }
+                    settingsState.scannedDevices
+                        .sortedByDescending { it.rssi }
+                        .forEach {
+                            var expanded by remember { mutableStateOf(false) }
 
-                        Column(
-                            modifier = Modifier.fillMaxWidth().clickable { expanded = !expanded },
-                            horizontalAlignment = Alignment.Start,
-                            verticalArrangement = Arrangement.spacedBy(4.dp),
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                            Column(
+                                modifier =
+                                    Modifier.fillMaxWidth().clickable { expanded = !expanded },
+                                horizontalAlignment = Alignment.Start,
+                                verticalArrangement = Arrangement.spacedBy(4.dp),
                             ) {
-                                Text(text = it.name, style = MaterialTheme.typography.titleMedium)
-
-                                checkpointBeacons[it.mac]?.let { checkpoint ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
                                     Text(
-                                        text = "#${checkpoint + 1}",
-                                        style = MaterialTheme.typography.bodyMedium
+                                        text = it.name,
+                                        style = MaterialTheme.typography.titleMedium
                                     )
-                                }
-                                    ?: run {
+
+                                    checkpointBeacons[it.mac]?.let { checkpoint ->
                                         Text(
-                                            text = "N/A",
+                                            text = "#${checkpoint + 1}",
                                             style = MaterialTheme.typography.bodyMedium
                                         )
                                     }
-                            }
+                                        ?: run {
+                                            Text(
+                                                text = "N/A",
+                                                style = MaterialTheme.typography.bodyMedium
+                                            )
+                                        }
+                                }
 
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text(
-                                    text = it.mac.toString(),
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                                Text(
-                                    text = "${it.rssi} dBm",
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(
+                                        text = it.mac.toString(),
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                    Text(
+                                        text = "${it.rssi} dBm",
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                }
 
-                            DropdownMenu(
-                                expanded = expanded,
-                                onDismissRequest = { expanded = false }
-                            ) {
-                                DropdownMenuItem(
-                                    text = { Text("None") },
-                                    onClick = {
-                                        checkpointBeacons.remove(it.mac)
-                                        expanded = false
-                                    }
-                                )
-
-                                (0 until settingsState.checkpointCount).forEach { beacon ->
+                                DropdownMenu(
+                                    expanded = expanded,
+                                    onDismissRequest = { expanded = false }
+                                ) {
                                     DropdownMenuItem(
-                                        text = { Text("Checkpoint ${beacon + 1}") },
+                                        text = { Text("None") },
                                         onClick = {
-                                            checkpointBeacons[it.mac] = beacon
+                                            checkpointBeacons.remove(it.mac)
                                             expanded = false
                                         }
                                     )
+
+                                    (0 until settingsState.checkpointCount).forEach { beacon ->
+                                        DropdownMenuItem(
+                                            text = { Text("Checkpoint ${beacon + 1}") },
+                                            onClick = {
+                                                checkpointBeacons[it.mac] = beacon
+                                                expanded = false
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
-                    }
                 }
             }
 
@@ -247,16 +251,6 @@ private fun BeaconSelectionCard(
                     Text("Confirm")
                 }
             }
-        }
-    }
-}
-
-@Preview
-@Composable
-fun BeaconSelectionDialogPreview() {
-    LodiponTheme {
-        Dialog(onDismissRequest = {}) {
-            BeaconSelectionCard(startScan = {}, stopScan = {}, onDismiss = {}, onConfirmation = {})
         }
     }
 }

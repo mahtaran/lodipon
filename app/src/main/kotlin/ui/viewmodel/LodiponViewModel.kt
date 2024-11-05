@@ -9,25 +9,34 @@ import androidx.lifecycle.viewModelScope
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
 import java.time.LocalDateTime
+import kotlin.time.TimeSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import nl.utwente.smartspaces.lodipon.R
+import nl.utwente.smartspaces.lodipon.data.ANOMALY_INTERVAL
 import nl.utwente.smartspaces.lodipon.data.CHART_LENGTH
 import nl.utwente.smartspaces.lodipon.data.ScannedDevice
+import nl.utwente.smartspaces.lodipon.ui.state.Checkpoint
+import nl.utwente.smartspaces.lodipon.ui.state.Mode
 import nl.utwente.smartspaces.lodipon.ui.state.Recommendation
 import nl.utwente.smartspaces.lodipon.ui.state.RunState
 import nl.utwente.smartspaces.lodipon.ui.state.SettingsState
 
 class LodiponViewModel : ViewModel() {
+    private val timeSource = TimeSource.Monotonic
+
     private val _settingsState = MutableStateFlow(SettingsState())
-    private val _runState = MutableStateFlow(RunState(LocalDateTime.now()))
+    private val _runState = MutableStateFlow(RunState(timeSource.markNow()))
 
     val settingsState = _settingsState.asStateFlow()
     val runState = _runState.asStateFlow()
 
     val modelProducer = CartesianChartModelProducer()
+
+    fun clearSettings() {
+        _settingsState.update { SettingsState() }
+    }
 
     fun setCheckpointThreshold(threshold: Double) {
         _settingsState.update { currentState -> currentState.copy(checkpointThreshold = threshold) }
@@ -67,17 +76,40 @@ class LodiponViewModel : ViewModel() {
         }
     }
 
+    fun setMode(mode: Mode) {
+        _settingsState.update { currentState -> currentState.copy(mode = mode) }
+    }
+
+    fun setConstantSpeed(speed: Double) {
+        _settingsState.update { currentState -> currentState.copy(constantSpeed = speed) }
+    }
+
+    fun setSpeedUpThreshold(threshold: Double) {
+        _settingsState.update { currentState -> currentState.copy(speedUpThreshold = threshold) }
+    }
+
+    fun setSlowDownThreshold(threshold: Double) {
+        _settingsState.update { currentState -> currentState.copy(slowDownThreshold = threshold) }
+    }
+
     fun passDevice(device: ScannedDevice) {
         if (device.distance < settingsState.value.checkpointDistance) {
-            for ((checkpoint, beacons) in settingsState.value.checkpointBeacons) {
-                if (runState.value.lastCheckpoint == checkpoint) continue
+            for ((checkpointIndex, beacons) in settingsState.value.checkpointBeacons) {
+                if (runState.value.lastCheckpoint == checkpointIndex) continue
 
                 if (beacons.contains(device.mac)) {
+                    val checkpoint =
+                        Checkpoint(
+                            index = checkpointIndex,
+                            time = LocalDateTime.now(),
+                            distance = settingsState.value.checkpointDistance,
+                            previous = runState.value.checkpoints.lastOrNull()
+                        )
+
                     _runState.update { currentState ->
                         currentState.copy(
-                            lastCheckpoint = checkpoint,
-                            checkpoints =
-                                currentState.checkpoints + (checkpoint to LocalDateTime.now())
+                            lastCheckpoint = checkpointIndex,
+                            checkpoints = currentState.checkpoints.apply { add(checkpoint) }
                         )
                     }
                 }
@@ -88,44 +120,49 @@ class LodiponViewModel : ViewModel() {
     fun updateLocation(context: Context, location: Location) {
         _runState.update { currentState ->
             currentState.copy(
-                lastUpdate = LocalDateTime.now(),
-                lastLocation = location,
-                speedWindow = currentState.speedWindow + location.speed.toDouble()
+                speedWindow = currentState.speedWindow + location.speed.toDouble(),
+                averageSpeedWindow =
+                    currentState.averageSpeedWindow + currentState.speedWindow.average
             )
+        }
+
+        if (runState.value.lastAnomaly + ANOMALY_INTERVAL < timeSource.markNow()) {
+            testAnomaly(context)
         }
 
         viewModelScope.launch {
             modelProducer.runTransaction {
-                lineSeries { series(runState.value.speedWindow.history.takeLast(CHART_LENGTH)) }
+                lineSeries { series(runState.value.speedWindow.window.takeLast(CHART_LENGTH)) }
+            }
+        }
+    }
+
+    private fun testAnomaly(context: Context) {
+        val targetSpeed =
+            when (settingsState.value.mode) {
+                Mode.KEEP_AVERAGE -> runState.value.averageSpeedWindow.average
+                Mode.CONSTANT_SPEED -> settingsState.value.constantSpeed
+            }
+        val speed = runState.value.speedWindow.average
+
+        val recommendation =
+            when {
+                speed < settingsState.value.speedUpThreshold * targetSpeed ->
+                    Recommendation.SPEED_UP
+                speed > settingsState.value.slowDownThreshold * targetSpeed ->
+                    Recommendation.SLOW_DOWN
+                else -> Recommendation.NONE
+            }
+
+        recommendation.sample?.let { sample ->
+            MediaPlayer.create(context, sample).run {
+                start()
+                setOnCompletionListener(MediaPlayer::release)
             }
         }
 
-        runState.value.speedWindow.performAnalysis()?.let { anomaly ->
-            _runState.update { currentState ->
-                // TODO: Implement recommendation logic
-                val recommendation = Recommendation.SLOW_DOWN
-
-                val media =
-                    MediaPlayer.create(
-                        context,
-                        if (recommendation == Recommendation.SLOW_DOWN) R.raw.slower
-                        else R.raw.faster
-                    )
-                media.start()
-                media.setOnCompletionListener { it.release() }
-
-                currentState.copy(
-                    anomalyText =
-                        "Anomaly detected at index ${anomaly.index} with magnitude ${anomaly.magnitude}",
-                    recommendation = recommendation
-                )
-            }
+        _runState.update { currentState ->
+            currentState.copy(lastAnomaly = timeSource.markNow(), recommendation = recommendation)
         }
-            ?: _runState.update { currentState ->
-                currentState.copy(
-                    anomalyText = "No anomalies detected",
-                    recommendation = Recommendation.NONE
-                )
-            }
     }
 }
