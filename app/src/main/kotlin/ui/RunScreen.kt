@@ -32,6 +32,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianLayerRangeProvider
+import nl.utwente.smartspaces.lodipon.data.CHART_AXIS_Y_MAX
+import nl.utwente.smartspaces.lodipon.data.CHART_AXIS_Y_MIN
 import nl.utwente.smartspaces.lodipon.data.ScannedDevice
 import nl.utwente.smartspaces.lodipon.ui.theme.LodiponTheme
 import nl.utwente.smartspaces.lodipon.ui.viewmodel.LodiponViewModel
@@ -80,6 +86,19 @@ fun RunScreen(modifier: Modifier = Modifier, viewModel: LodiponViewModel = viewM
             ) {
                 Text(text = "Speed: ${runState.lastLocation?.speed} m/s")
                 Text(text = runState.anomalyText)
+                CartesianChartHost(
+                    chart =
+                        rememberCartesianChart(
+                            rememberLineCartesianLayer(
+                                rangeProvider =
+                                    CartesianLayerRangeProvider.fixed(
+                                        minY = CHART_AXIS_Y_MIN,
+                                        maxY = CHART_AXIS_Y_MAX
+                                    )
+                            )
+                        ),
+                    modelProducer = viewModel.modelProducer
+                )
             }
 
             Column(

@@ -5,11 +5,16 @@ import android.location.Location
 import android.media.MediaPlayer
 import android.net.MacAddress
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
 import java.time.LocalDateTime
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import nl.utwente.smartspaces.lodipon.R
+import nl.utwente.smartspaces.lodipon.data.CHART_LENGTH
 import nl.utwente.smartspaces.lodipon.data.ScannedDevice
 import nl.utwente.smartspaces.lodipon.ui.state.Recommendation
 import nl.utwente.smartspaces.lodipon.ui.state.RunState
@@ -21,6 +26,8 @@ class LodiponViewModel : ViewModel() {
 
     val settingsState = _settingsState.asStateFlow()
     val runState = _runState.asStateFlow()
+
+    val modelProducer = CartesianChartModelProducer()
 
     fun setCheckpointThreshold(threshold: Double) {
         _settingsState.update { currentState -> currentState.copy(checkpointThreshold = threshold) }
@@ -85,6 +92,12 @@ class LodiponViewModel : ViewModel() {
                 lastLocation = location,
                 speedWindow = currentState.speedWindow + location.speed.toDouble()
             )
+        }
+
+        viewModelScope.launch {
+            modelProducer.runTransaction {
+                lineSeries { series(runState.value.speedWindow.history.takeLast(CHART_LENGTH)) }
+            }
         }
 
         runState.value.speedWindow.performAnalysis()?.let { anomaly ->
