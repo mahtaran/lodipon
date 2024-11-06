@@ -24,6 +24,9 @@ gradle/wrapper/gradle-wrapper.jar	binary
 *.md								text
 
 # Media
+## Audio
+*.mp3								binary
+
 ## Graphics
 *.excalidraw						text	linguist-language=JSON
 *.jpg								binary
@@ -31,8 +34,8 @@ gradle/wrapper/gradle-wrapper.jar	binary
 *.svg								text
 *.webp								binary
 
-## Audio
-*.mp3								binary
+## Video
+*.mp4								binary
 
 # Data
 *.json								text
